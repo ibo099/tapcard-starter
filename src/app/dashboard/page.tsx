@@ -18,6 +18,8 @@ export default function Dashboard() {
   const [name, setName] = useState("John Doe");
   const [bio, setBio] = useState("");
   const [color, setColor] = useState("#6E35E9");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [links, setLinks] = useState<{ title: string; url: string }[]>([]);
   const [newLinkTitle, setNewLinkTitle] = useState("");
   const [newLinkUrl, setNewLinkUrl] = useState("");
@@ -28,6 +30,26 @@ export default function Dashboard() {
       const loggedIn = localStorage.getItem("loggedIn");
       if (loggedIn !== "true") {
         router.replace("/signin");
+      }
+      // Load saved card details on first render
+      const savedName = localStorage.getItem("tapcard_name");
+      const savedBio = localStorage.getItem("tapcard_bio");
+      const savedColor = localStorage.getItem("tapcard_color");
+      const savedPhone = localStorage.getItem("tapcard_phone");
+      const savedEmail = localStorage.getItem("tapcard_email");
+      const savedLinks = localStorage.getItem("tapcard_links");
+      if (savedName) setName(savedName);
+      if (savedBio) setBio(savedBio);
+      if (savedColor) setColor(savedColor);
+      if (savedPhone) setPhone(savedPhone);
+      if (savedEmail) setEmail(savedEmail);
+      if (savedLinks) {
+        try {
+          const parsed = JSON.parse(savedLinks);
+          if (Array.isArray(parsed)) setLinks(parsed);
+        } catch {
+          // ignore invalid JSON
+        }
       }
     }
   }, [router]);
@@ -45,6 +67,27 @@ export default function Dashboard() {
   function removeLink(index: number) {
     setLinks((prev) => prev.filter((_, i) => i !== index));
   }
+
+  // Persist user data to localStorage so the preview page can read it. Whenever
+  // the relevant state changes, update the corresponding keys. We exclude
+  // undefined values to avoid storing the string "undefined".
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    localStorage.setItem("tapcard_name", name);
+    localStorage.setItem("tapcard_bio", bio);
+    localStorage.setItem("tapcard_color", color);
+    if (phone) {
+      localStorage.setItem("tapcard_phone", phone);
+    } else {
+      localStorage.removeItem("tapcard_phone");
+    }
+    if (email) {
+      localStorage.setItem("tapcard_email", email);
+    } else {
+      localStorage.removeItem("tapcard_email");
+    }
+    localStorage.setItem("tapcard_links", JSON.stringify(links));
+  }, [name, bio, color, phone, email, links]);
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen p-8 gap-10">
@@ -73,6 +116,31 @@ export default function Dashboard() {
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             placeholder="Your profession or tagline"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label className="font-medium" htmlFor="phone">
+            Phone (optional)
+          </label>
+          <input
+            id="phone"
+            className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="e.g. +1234567890"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label className="font-medium" htmlFor="email">
+            Email (optional)
+          </label>
+          <input
+            id="email"
+            type="email"
+            className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -128,10 +196,22 @@ export default function Dashboard() {
               type="button"
               onClick={addLink}
               className="self-start px-4 py-2 rounded-full text-white text-sm"
-              style={{ backgroundColor: "#6E35E9" }}
+              style={{ backgroundColor: color }}
             >
               Add Link
             </button>
+          </div>
+          {/* Preview link */}
+          <div className="mt-4">
+            <a
+              href="/preview"
+              className="inline-block px-4 py-2 text-sm font-medium rounded-full"
+              style={{ borderColor: color, color: color, borderWidth: 1, borderStyle: "solid" }}
+              target="_blank"
+              rel="noopener"
+            >
+              View public preview
+            </a>
           </div>
         </div>
       </div>
@@ -142,6 +222,8 @@ export default function Dashboard() {
             name={name}
             bio={bio}
             primaryColor={color}
+            phone={phone}
+            email={email}
             links={links}
           />
         </InteractiveCard>

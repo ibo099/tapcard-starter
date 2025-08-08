@@ -51,12 +51,20 @@ export default function Waitlist() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-8">
-      <h1 className="text-3xl font-bold mb-6">Join the Waitlist</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-gray-50 dark:bg-gray-900 text-center">
+      <h1 className="text-4xl font-bold mb-3">Join the waitlist</h1>
+      <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-md">
+        Be the first to know when we launch. Sign up and we’ll email you once your
+        digital card is ready.
+      </p>
       {success ? (
-        <p className="text-green-600">Thank you for joining! We will be in touch.</p>
+        <div className="bg-green-50 dark:bg-green-800 border border-green-200 dark:border-green-700 rounded-xl p-4">
+          <p className="text-green-700 dark:text-green-200">
+            Thank you for joining! We will be in touch.
+          </p>
+        </div>
       ) : (
-        <form onSubmit={handleSubmit} className="w-full max-w-sm flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="w-full max-w-sm flex flex-col gap-4 bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
           <input
             type="text"
             placeholder="Name"
@@ -75,11 +83,11 @@ export default function Waitlist() {
           />
           <button
             type="submit"
-            className="rounded px-4 py-2 text-white"
+            className="rounded-full px-4 py-2 text-white font-medium"
             style={{ backgroundColor: "#6E35E9" }}
             disabled={loading}
           >
-            {loading ? "Submitting..." : "Join"}
+            {loading ? "Submitting..." : "Join the waitlist"}
           </button>
         </form>
       )}

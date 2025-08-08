@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
 /**
  * InteractiveCard
@@ -48,22 +48,18 @@ export default function InteractiveCard({
     if (typeof window === "undefined") return;
     const card = cardRef.current;
     if (!card) return;
-    const isMobile = window.innerWidth < 768;
-    if (!isMobile) return;
-    function handleScroll() {
+    const handleScroll = () => {
+      // Only apply the flip animation on small screens
+      if (window.innerWidth >= 768) return;
       const rect = card.getBoundingClientRect();
       const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-      // Compute how far the card is from top: 1 when fully in view, 0 when out
       const ratio = Math.min(Math.max((windowHeight - rect.top) / windowHeight, 0), 1);
-      const rotation = ratio * 180; // rotate up to 180deg
+      const rotation = ratio * 180;
       card.style.transform = `rotateY(${rotation}deg)`;
-    }
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    // initialize position
-    handleScroll();
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
     };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
