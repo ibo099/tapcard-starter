@@ -21,7 +21,7 @@ export default function Home() {
       <InteractiveCard>
         <CardPreview name="Name Last name" bio="Your bio" primaryColor="#6E35E9" />
       </InteractiveCard>
-      <div className="flex flex-col sm:flex-row gap-4 mt-4">
+      <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-4 mt-4">
         <a
           href="/waitlist"
           className="inline-block px-6 py-3 rounded-full text-white font-medium"
@@ -35,6 +35,13 @@ export default function Home() {
           style={{ borderColor: "#6E35E9", color: "#6E35E9" }}
         >
           Live preview
+        </a>
+        <a
+          href="/buy"
+          className="inline-block px-6 py-3 rounded-full border font-medium"
+          style={{ borderColor: "#6E35E9", color: "#6E35E9" }}
+        >
+          Buy a card
         </a>
       </div>
     </div>

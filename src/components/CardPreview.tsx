@@ -13,15 +13,23 @@ import React from "react";
  * giving users the ability to customise the look of their card in
  * real time. If no values are provided, placeholder text is used.
  */
+interface LinkItem {
+  title: string;
+  url: string;
+}
+
 export default function CardPreview({
   name,
   bio,
   primaryColor,
+  links = [],
 }: {
   name: string;
   bio: string;
   primaryColor: string;
+  links?: LinkItem[];
 }) {
+  const accent = primaryColor || "#6E35E9";
   return (
     <div className="bg-white text-black dark:bg-gray-900 dark:text-white rounded-3xl p-6 shadow-lg w-80 sm:w-96">
       {/* Cover image placeholder */}
@@ -30,7 +38,7 @@ export default function CardPreview({
       <div className="flex justify-center -mt-12 mb-4">
         <div
           className="w-24 h-24 rounded-full border-4 border-white dark:border-gray-900 flex items-center justify-center text-white"
-          style={{ backgroundColor: primaryColor || "#6E35E9" }}
+          style={{ backgroundColor: accent }}
         >
           {/* Simple placeholder icon */}
           <svg
@@ -58,6 +66,26 @@ export default function CardPreview({
           {bio?.trim() || "Bio"}
         </p>
       </div>
+      {/* Links section */}
+      {links.length > 0 && (
+        <div className="mt-4 flex flex-col gap-2">
+          {links.map((link) => (
+            <a
+              key={link.url}
+              href={link.url || "#"}
+              className="block text-center rounded-full px-4 py-2"
+              style={{
+                border: `1px solid ${accent}`,
+                color: accent,
+              }}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {link.title || link.url}
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
