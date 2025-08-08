@@ -54,7 +54,7 @@ export default function Waitlist() {
     <div className="min-h-screen flex flex-col items-center justify-center p-8">
       <h1 className="text-3xl font-bold mb-6">Join the Waitlist</h1>
       {success ? (
-        <p className="text-green-600">Thank you for joining! We'll be in touch.</p>
+        <p className="text-green-600">Thank you for joining! We will be in touch.</p>
       ) : (
         <form onSubmit={handleSubmit} className="w-full max-w-sm flex flex-col gap-4">
           <input
